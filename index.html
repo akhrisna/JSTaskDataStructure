@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <!-- meta-->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Task</title>
+        <link rel="icon" type="image/png" href="img/favicon.png" sizes="18x18">
+        
+        <!-- script -->
+        <script>
+
+            // linked list class
+            var linkedlist = function() {
+
+                // vars
+                this.start = null;
+                this.end = null;
+
+                // make node
+                this.makeNode = function() {
+
+                    // return an object
+                    return { 'data': null, 'next': null };
+                };
+
+                // add node
+                this.add = function(data) {
+
+                    // check
+                    if(this.start == null) {
+
+                        // create node and set it as start and end
+                        this.start = this.makeNode();
+                        this.end = this.start;
+
+                        // set data
+                        this.start.data = data;
+                    } else {
+
+                        // already has some node
+                        // create new node and set it as the linked list end
+                        this.end.next = this.makeNode();
+
+                        // set the end of the linked list to this newly created node
+                        this.end = this.end.next;
+
+                        // set data
+                        this.end.data = data;
+                    }
+                };
+
+                // delete node
+                this.traverse = function() {
+
+                    // vars
+                    var current = this.start,
+                        i = 1;
+
+                    // while
+                    while(current !== null) {
+
+                        // print
+                        console.log("Item nr. "+i+" is "+current.data+" --");
+
+                        // go to the next
+                        current = current.next;
+
+                        // iterate
+                        i++;
+                    }
+                };
+
+                // insert first
+                this.insertFirst = function(data) {
+
+                    // vars
+                    var newList = this.makeNode();
+                    
+                    // set data
+                    newList.data = data;
+
+                    // grab the value of start
+                    var tmp = this.start;
+
+                    // set newlist as the start
+                    this.start = newList;
+
+                    // set the old next link as the newlist next link
+                    newList.next = tmp.next;
+                };
+
+                // insert after
+                this.insertAfter = function(after, data) {
+                
+                    // vars
+                    var current = this.start,
+                        previous = this.start,
+                        newList = this.makeNode(),
+                        dataFound = false;
+
+                    // set new data
+                    newList.data = data;
+
+                    // loop
+                    while(current !== null) {
+
+                        // found the data
+                        if(current.data === after) {
+
+                            // if found list is the end of the linked list
+                            if(current === this.end) {
+
+                                // set the new list as the end of the list
+                                this.end = newList;
+                            }
+
+                            // attach the next of the current item to the newly created list
+                            var tmp = current.next;
+                            current.next = newList;
+
+                            // connect the current next to the newlist next
+                            newList.next = tmp;
+
+                            // set status
+                            dataFound = true;
+                        }
+
+                        // loop
+                        previous = current;
+                        current = current.next;
+                    }
+
+                    // check
+                    return dataFound;
+                }
+
+                // pop first
+                this.pop = function() {
+
+                    // vars
+                    tmp = this.start;
+                    this.start = this.start.next;
+
+                    // return
+                    return tmp;
+                };
+
+                // delete node
+                this.delete = function(data) {
+
+                    // vars
+                    var current = this.start,
+                        previous = this.start;
+
+                    // loop
+                    while(current !== null) {
+
+                        // check data
+                        if(current.data === data) {
+
+                            // found the data
+                            // well well, the item to be deleted is the first list
+                            if(current === this.start) {
+                                
+                                // set start of the list to be the next item (skip the deleted item)
+                                this.start = current.next; 
+                            }
+
+                            // the item to be deleted is the last list
+                            if(current === this.end) {
+
+                                // set the previous of the list to be the last item
+                                this.end = previous;
+                            }
+
+                            // if the item is in the middle of the page
+                            previous.next = current.next;
+                        }
+
+                        // go
+                        previous = current;
+                        current = current.next;
+                    }
+                };
+            };
+
+            // task class
+            var task = function() {
+
+                // split and reverse word function
+                this.splitreverse = function(words) {
+
+                    // split ever single word
+                    // reverse the array and join them
+                    // split again based on space, words are still backwards
+                    // reverse the array and join them and give some space
+                    var res = words.split("").reverse().join("").split(" ").reverse().join(" ");
+                    
+                    // return it
+                    return res;
+                };
+
+                // shortest sequence function
+                this.shortestseq = function(number) {
+
+                    // the shortest sequence will be by using the first rule (a*2) until the value is bigger than N
+                    // then shift back and do the second rule (a+1)
+
+                    // first create an array as holder
+                    var holder = [1],
+                        pointer = 0,
+                        i = 0;
+
+                    // loop
+                    while (pointer < number) {
+
+                        // rule
+                        pointer = holder[i] * 2;
+                        
+                        // when pointer is bigger than input number
+                        if(pointer > number) {
+                            
+                            // next rule
+                            pointer = holder[i] + 1;
+                        } 
+
+                        // save to holder and iterate
+                        holder.push(pointer);
+                        i++;
+                    }
+                    
+                    // return it
+                    return holder;
+                };
+
+                // shortest sequence function
+                this.shortestseqsecond = function(number, holder) {
+
+                    // starts from the top, modulus number
+                    // when the number is 1 return it, job done
+                    if(number === 1) {
+
+                        // store to holder
+                        holder.push(number);
+
+                        // return the results
+                        return holder.reverse();
+                    } else {
+
+                        // starts by modulus number, when the result is not 0
+                        if(number % 2 !== 0) {
+
+                            // add to holder
+                            holder.push(number);
+
+                            // call function recursively and number is substract by 1
+                            return this.shortestseqsecond(number - 1, holder);
+                        } else { // modulus result is 0
+
+                            // add to holder
+                            holder.push(number);
+
+                            // call function recursively, but this time divide by 2, because the modulus is 0
+                            return this.shortestseqsecond(number / 2, holder);
+                        }
+                    }
+                };
+
+                // debug code test
+                this.debugmatch = function(A, B) {
+
+                    // variables
+                    var n = A.length;
+                    var m = B.length;
+
+                    // helper function
+                    var cmp = function(a, b) {
+
+                        // return a - b
+                        return a - b;
+                    }
+                    
+                    // sort each array
+                    A.sort(cmp);
+                    B.sort(cmp);
+
+                    // loop variable for B array
+                    var i = 0;
+
+                    // start by looping the A array
+                    for (var k = 0; k < n; k++) { 
+
+                        // internal loop for B
+                        while (i < m - 1 && B[i] < A[k]) {
+
+                            // increment iterator
+                            i += 1;
+                        }
+
+                        // check the value
+                        if (A[k] == B[i]) {
+
+                            // return if same value found
+                            return A[k];
+                        }
+                    }
+
+                    // return -1 if no value match
+                    return -1;
+                };
+
+                // pair indices function
+                this.pairindices = function(A) {
+
+                    // variables
+                    var max = 0;
+
+                    // loop the array
+                    for(var p = 0; p < A.length; p++) {
+                        
+                        // another loop to create pair indices
+                        for (var q = p; q < A.length ; q++) {
+                               
+                            // calculate based on formula
+                            var val = A[p] + A[q] + (q-p); 
+
+                            // store the max
+                            if(val > max) {
+                                max = val;
+                            }
+                        }
+                    }
+
+                    // return
+                    return max; 
+                };
+            };
+
+            // create new instance
+            var letask = new task();
+
+            // reverse word
+            var reverse = letask.splitreverse("i work in hackerspace");
+            console.log("RESULT SPLIT REVERSE = "+reverse);
+
+            var shortes = letask.shortestseq(111);
+            console.log("RESULT SHORTEST SEQUENCE = "+shortes);
+
+            var shortesarr = letask.shortestseqsecond(111,[]);
+            console.log("RESULT SHORTEST SEQUENCE SECOND = "+shortesarr);
+
+            var value = letask.debugmatch([1, 4, 3, 7, 8],[2, 7, 6, 10]);
+            console.log("RESULT DEBUG MATCH = "+value);
+
+            // pair indices function
+            var indices = letask.pairindices([-8, 4, 0, 5, -3, 6]);
+            console.log("RESULT PAIR INDICES = "+indices);
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
